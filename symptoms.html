@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>当たらない・先っぽに当たる｜2つの崩れ方</title>
+<style>
+  :root{--bg:#0a0e1a;--card:#111827;--line:#1e3a5f;--gold:#f6c90e;--red:#fc8181;--blue:#7dd3fc;--white:#f8fafc;--gray:#94a3b8;--body:#e2e8f0}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:32px 16px 48px}
+  .label{font-size:11px;letter-spacing:.3em;color:var(--gold);font-weight:700;text-align:center;margin:0 0 10px}
+  h1{font-size:24px;font-weight:900;text-align:center;margin:0 0 8px;line-height:1.4}
+  .lead{font-size:14px;color:var(--gray);text-align:center;line-height:1.8;max-width:600px;margin:0 auto 24px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;max-width:680px;margin:0 auto}
+  .band{height:4px;background:var(--gold)}
+  .three{position:relative;width:100%;aspect-ratio:4/3;background:#0a0e1a;cursor:grab}
+  .three canvas{width:100%;height:100%;display:block}
+  .tag{position:absolute;left:14px;top:12px;font-size:12px;letter-spacing:.2em;color:var(--gold);font-weight:700}
+  .name{position:absolute;left:14px;top:30px;font-size:20px;font-weight:900;color:var(--white)}
+  .hgt{position:absolute;left:14px;bottom:12px;font-size:12px;color:var(--gray)}
+  .hgt b{color:var(--white)}
+  .wm{position:absolute;top:12px;right:12px;height:34px;opacity:.92;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.7))}
+  .pctrl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 16px 0}
+  .pctrl button{background:#1e293b;color:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer}
+  .pctrl button.on{border-color:var(--gold);color:var(--gold)}
+  .pctrl button.bad.on{border-color:var(--red);color:var(--red)}
+  .graph{margin:14px 16px 0}
+  .graph svg{display:block;width:100%;height:auto}
+  .verdict{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 16px 0}
+  .verdict div{background:#0a0e1a;border:1px solid var(--line);border-radius:8px;padding:8px 4px;text-align:center}
+  .verdict small{display:block;font-size:10px;color:var(--gray);letter-spacing:.1em}
+  .verdict b{font-size:15px}
+  .v-down{color:var(--gold)} .v-flat{color:var(--white)} .v-up{color:var(--red)}
+  .hits{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:8px 16px 0}
+  .hits div{background:#0a0e1a;border:1px solid var(--line);border-radius:8px;padding:8px 6px;text-align:center}
+  .hits small{display:block;font-size:10px;color:var(--gray);letter-spacing:.1em}
+  .hits b{font-size:15px}
+  .hits .sub{font-size:11px;color:var(--gray)}
+  .h-ok{color:var(--gold)} .h-tip{color:var(--red)} .h-miss{color:var(--blue)} .h-root{color:var(--red)}
+  .where{margin:12px 20px 18px;font-size:13px;line-height:1.8;color:var(--body);min-height:60px}
+  .where b{color:var(--gold)}
+  .note{font-size:12px;color:var(--gray);line-height:1.8;text-align:center;margin:20px auto 0;max-width:600px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:center;font-size:12px;color:var(--gray);margin:16px 0 0}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{display:inline-block;width:14px;height:14px;border-radius:3px}
+  .sec{margin-top:56px;padding-top:40px;border-top:1px solid var(--line)}
+  .use{font-size:12px;color:#f6c90e;text-align:center;margin:10px auto 0;max-width:560px;line-height:1.7}
+  .sig{text-align:center;font-size:11px;color:var(--gray);margin-top:36px;line-height:1.9}
+  .sig b{color:var(--white)}
+  body.only-a #figB, body.only-a .sec-b-note, body.only-b #figA, body.only-b .sec-a-note{display:none}
+  body.only-b #figB.sec{margin-top:0;padding-top:0;border-top:none}
+  body.still .pctrl{display:none}
+  .cta{text-align:center;margin:28px auto 0}
+  .cta p{font-size:13px;color:var(--gray);margin:0 0 10px}
+  .cta a{display:inline-block;background:var(--gold);color:#0a0e1a;font-weight:900;padding:12px 22px;border-radius:10px;text-decoration:none;font-size:14px}
+  .cta a:hover{filter:brightness(1.08)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="figA">
+    <p class="label">SYMPTOM A</p>
+    <h1>当たらない。——スイングバックのグリップダウン</h1>
+    <p class="lead">スイングバックで落ちるのはヘッドだけです。グリップまで一緒に下がると、ヘッドはボールの軌道より下を通り、ボールの下を空振りします。ダウンの「量」が多すぎる崩れ方です。ドラッグで視点を回せます。</p>
+    <div class="card" data-fig="a"></div>
+    <p class="note sec-a-note">白いボールは前面の引きつけたポイントと、前のポイント（投手寄り）です。正しい形ではどちらも芯（先端から10〜25cm）で捉えます。グリップが下がった形では、バットはどちらのボールよりも下を通ります。</p>
+  </div>
+
+  <div id="figB" class="sec">
+    <p class="label">SYMPTOM B</p>
+    <h1>先っぽに当たる。——意図的なアッパー</h1>
+    <p class="lead">スイングフロントからフォローにかけて意図的にアッパーフェイズを作ると、バットごと芯が上に移動します。ボールの高さに残るのは芯より先の部分だけになり、その分だけ先に当たります。低めほど起きやすい。ドラッグで視点を回せます。</p>
+    <div class="card" data-fig="b"></div>
+    <p class="note sec-b-note">正しい形ではスイングフロントは平行のまま、上がるのはフォローだけです。ボールの高さを「低め」に切り替えると、引きつけたポイントでも先に当たるようになります。低めは股関節屈曲が深くなり、バットの角度が急になるので、芯が持ち上がった分のずれが大きく出ます。</p>
+  </div>
+
+  <div class="legend">
+    <span><i style="background:#f6c90e"></i>ダウン</span>
+    <span><i style="background:#f8fafc"></i>平行</span>
+    <span><i style="background:#fc8181"></i>アッパー</span>
+    <span><i style="background:#f6c90e;opacity:.5;border:1px solid #f6c90e"></i>バットの芯</span>
+  </div>
+  <div class="cta"><p>前面・後面、トップハンド後面・ボトムハンド後面が気になった方へ。打席の線の話は、こちらの記事で書いています。</p><a href="https://note.com/humble_kiwi8378/n/ne553bda71c0a" target="_blank" rel="noopener">「打撃の本質」を読む（note・有料）→</a></div>
+  <p class="use">図の著作権は体修塾BCAにあります。有料読者の方の指導での使用は自由です。転載・再配布はご遠慮ください。</p>
+  <div class="sig"><b>体修塾BCA｜新潟県・柏崎の野球個別指導スクール</b><br>代表 大林智也｜日体大 体育学 ／ 上越教育大学院 スポーツ心理学修士<br>📍 新潟県柏崎市｜新潟県全域・出張指導対応</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const QS=location.search;
+  const only=(QS.match(/[?&]fig=(a|b)/)||[])[1]; if(only) document.body.classList.add('only-'+only);
+  const still=/[?&]still=1/.test(QS); if(still) document.body.classList.add('still');
+  const T=THREE, rad=d=>d*Math.PI/180, sm=x=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);};
+  const GOLD=0xf6c90e, WHITE=0xf8fafc, GRAY=0x94a3b8, NAVY=0x1e293b, BLUE=0x7dd3fc, RED=0xfc8181;
+  const MX=-1, H=new T.Vector3(0,1.0,0), L=0.5, RH=1.2, RG=0.42, BETA=8;
+  const HEIGHTS={high:{name:'高め',y:1.05,alpha:24},mid:{name:'真ん中',y:0.90,alpha:30},low:{name:'低め',y:0.75,alpha:36}}; // 低めほど股関節屈曲が深い
+  const PH=[[0,75,'スイングバック','PHASE 1'],[75,135,'スイングアウト','PHASE 2'],[135,200,'スイングフロント','PHASE 3'],[200,300,'スイングフォロー','PHASE 4']];
+  const BALL_Z=1.2;
+  const STATES={
+    a:{ ok:{name:'正しい形',key:'ok',E:0,D:0,gd:0,ext:0.12}, bad:{name:'グリップダウン',key:'bad',E:0,D:0,gd:0.2,ext:0.12} },
+    b:{ ok:{name:'正しい形',key:'ok',E:0,D:0,gd:0,ext:0.12}, bad:{name:'意図的なアッパー',key:'bad',lift:0.06,ls:150,lw:90,gd:0,ext:0.04} },
+  };
+  const TEXT={
+    a:{ ok:'スイングバックで落ちるのは<b>ヘッドだけ</b>。グリップは高さを保ったまま体の中心に引き寄せられ、ヘッドは肩のラインで止まります。そこから先の高さは脊柱の傾きが決めるので、引きつけたポイントも投手寄りのポイントも芯で捉えます。',
+        bad:'スイングバックで<b>グリップだけが20cm下がった</b>形。体の姿勢は同じでも、ヘッドの高さはグリップの高さで決まるので、バットはボールの軌道より下を通ります。結果は<b>下空振り</b>。「早めに投球軌道に入れる」を、グリップを下げて形だけ真似るとこうなります。'},
+    b:{ ok:'スイングアウトまでダウン、<b>スイングフロントは平行</b>、上がるのはフォローだけ。芯がボールの高さに残ったまま前面を通るので、引きつけたポイントでも前のポイントでも芯で捉えます。',
+        bad:'スイングフロントからフォローにかけて<b>意図的にアッパーフェイズを作った</b>形。バット全体が持ち上がるので、<b>芯も上に移動します</b>。ボールの高さに残っているのは芯より先の部分だけになり、その分だけ先に当たります。低めほど、この差が大きくなります。'}
+  };
+  const GC={}; function geomFor(alpha){ if(!GC[alpha]){const M=new T.Matrix4().makeRotationZ(-MX*rad(BETA)).multiply(new T.Matrix4().makeRotationX(rad(alpha))); const n=new T.Vector3(0,1,0).applyMatrix4(M); GC[alpha]={M,n,C:H.clone().add(n.clone().multiplyScalar(L))};} return GC[alpha]; }
+  const dir=p=>new T.Vector3(MX*Math.sin(rad(p)),0,-Math.cos(rad(p)));
+  const rH=(p,ext)=>0.78+(RH-0.78)*sm((p-45)/90)+ext*sm((p-130)/70);
+  const rG=p=>0.22+(RG-0.22)*sm((p-40)/100);
+  const lag=p=>38*Math.max(0,1-p/150);
+  function pose(p,s,g){
+    const e=rad(62*(1-sm(p/75)));
+    const dy=(s.lift||0)*sm((p-(s.ls||150))/(s.lw||90))-(s.gd||0)*sm(p/75);
+    const hd=dir(p).multiplyScalar(Math.cos(e)).add(new T.Vector3(0,Math.sin(e),0));
+    const C=g.C, off=new T.Vector3(0,dy,0); // 体は動かさず、手（グリップ）とバットだけ上下する
+    const head=C.clone().add(hd.applyMatrix4(g.M).multiplyScalar(rH(p,s.ext))).add(off);
+    const grip=C.clone().add(dir(p+lag(p)).applyMatrix4(g.M).multiplyScalar(rG(p))).add(off);
+    return {grip,head,C};
+  }
+  function contact(ball,s,g){
+    let best={d:9};
+    for(let p=90;p<=240;p+=1){const {grip,head}=pose(p,s,g); const v=head.clone().sub(grip); const t=Math.max(0,Math.min(1,ball.clone().sub(grip).dot(v)/v.dot(v))); const qp=grip.clone().add(v.clone().multiplyScalar(t)); const d=qp.distanceTo(ball);
+      if(d<best.d) best={d,p,fromTip:(1-t)*v.length(),dy:qp.y-ball.y};}
+    return best;
+  }
+  const colOf=s=>s<-0.0012?GOLD:(s>0.0012?RED:WHITE), cssOf=s=>s<-0.0012?'v-down':(s>0.0012?'v-up':'v-flat'), nameOf=s=>s<-0.0012?'ダウン':(s>0.0012?'アッパー':'平行');
+
+  function makeFig(card,mode){
+    card.innerHTML=`<div class="band"></div>
+      <div class="three"><canvas></canvas><div class="tag"></div><div class="name"></div><div class="hgt"></div><img class="wm" src="logo-text.png" alt="体修塾BCA"></div>
+      <div class="pctrl st"><button data-s="ok">正しい形</button><button data-s="bad" class="bad">${STATES[mode].bad.name}</button></div>
+      <div class="pctrl ht"><span style="font-size:12px;color:#94a3b8;align-self:center">ボールの高さ</span><button data-h="high">高め</button><button data-h="mid" class="on">真ん中</button><button data-h="low">低め</button></div>
+      <div class="pctrl vw"><button data-v="pitcher">投手から</button><button data-v="side">横から</button><button data-v="top">真上から</button><button data-v="iso">斜めから</button><button data-v="play">▶ 再生</button></div>
+      <div class="graph"><svg viewBox="0 0 640 190"></svg></div>
+      <div class="verdict"></div>
+      <div class="hits"></div>
+      <p class="where"></p>`;
+    const cv=card.querySelector('canvas'), wrap=card.querySelector('.three'), tag=card.querySelector('.tag'), nm=card.querySelector('.name'), hgt=card.querySelector('.hgt'), svg=card.querySelector('svg');
+    const renderer=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:false,preserveDrawingBuffer:true}); renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+    const scene=new T.Scene(); scene.background=new T.Color(0x0a0e1a);
+    const cam=new T.PerspectiveCamera(38,4/3,0.1,100);
+    scene.add(new T.AmbientLight(0xffffff,0.55)); const key=new T.DirectionalLight(0xffffff,0.9); key.position.set(3,6,4); scene.add(key); const rim=new T.DirectionalLight(0xf6c90e,0.35); rim.position.set(-4,3,-3); scene.add(rim);
+    const mat=(c,o)=>new T.MeshStandardMaterial({color:c,roughness:.6,metalness:.1,transparent:o!==undefined,opacity:o===undefined?1:o});
+    const floor=new T.Mesh(new T.PlaneGeometry(4.4,4.4),mat(0x111827,.9)); floor.rotation.x=-Math.PI/2; scene.add(floor);
+    const grid=new T.GridHelper(4.4,11,0x1e3a5f,0x1e3a5f); grid.position.y=0.001; scene.add(grid);
+    const zoneMat=(c,o)=>new T.MeshBasicMaterial({color:c,transparent:true,opacity:o,side:T.DoubleSide,depthWrite:false});
+    const zFront=new T.Mesh(new T.PlaneGeometry(4.4,2.2),zoneMat(GOLD,.09)); zFront.rotation.x=-Math.PI/2; zFront.position.set(0,0.004,1.1); scene.add(zFront);
+    const dl=(a,b,c,o)=>{const l=new T.Line(new T.BufferGeometry().setFromPoints([a,b]),new T.LineDashedMaterial({color:c,dashSize:.08,gapSize:.06,transparent:true,opacity:o}));l.computeLineDistances();return l;};
+    scene.add(dl(new T.Vector3(-2.2,0.006,0),new T.Vector3(2.2,0.006,0),WHITE,.5));
+    function label(text,color,pos,scale){const c=document.createElement('canvas');c.width=256;c.height=64;const x=c.getContext('2d');x.font='bold 30px sans-serif';x.fillStyle=color;x.textAlign='center';x.fillText(text,128,42);const t=new T.CanvasTexture(c);const sp=new T.Sprite(new T.SpriteMaterial({map:t,transparent:true,depthTest:false}));sp.renderOrder=10;sp.scale.set(scale||.6,(scale||.6)/4,1);sp.position.copy(pos);return sp;}
+    scene.add(label('前面','#f6c90e',new T.Vector3(MX*-1.4,0.12,1.9),.7));
+    scene.add(label('投手方向 →','#94a3b8',new T.Vector3(1.9,0.12,0.3),.8));
+    const zBackT=new T.Mesh(new T.PlaneGeometry(2.2,2.2),zoneMat(BLUE,.16)); zBackT.rotation.x=-Math.PI/2; zBackT.position.set(MX*1.1,0.004,-1.1); scene.add(zBackT);
+    const zBackB=new T.Mesh(new T.PlaneGeometry(2.2,2.2),zoneMat(RED,.12)); zBackB.rotation.x=-Math.PI/2; zBackB.position.set(MX*-1.1,0.004,-1.1); scene.add(zBackB);
+    scene.add(dl(new T.Vector3(0,0.006,-2.2),new T.Vector3(0,0.006,0),WHITE,.4));
+    scene.add(label('トップハンド後面','#7dd3fc',new T.Vector3(MX*1.1,0.12,-1.75),.95));
+    scene.add(label('ボトムハンド後面','#fc8181',new T.Vector3(MX*-1.1,0.12,-1.75),.95));
+    // 投球ラインとボール
+    const pitch=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]),new T.LineBasicMaterial({color:GRAY,transparent:true,opacity:.7})); scene.add(pitch);
+    const BALLS=[{x:-0.10,name:'引きつけたポイント',ly:0.17},{x:0.35,name:'前のポイント',ly:-0.16}].map(b=>{const m=new T.Mesh(new T.SphereGeometry(0.045,14,12),mat(WHITE)); scene.add(m); const lb=label(b.name,'#f8fafc',new T.Vector3(),.85); scene.add(lb); return {...b,mesh:m,lb,pos:new T.Vector3()};});
+    let hk='mid'; let g=geomFor(HEIGHTS[hk].alpha);
+    function setHeight(k){hk=k; g=geomFor(HEIGHTS[k].alpha); const y=HEIGHTS[k].y; BALLS.forEach(b=>{b.mesh.position.set(b.x,y,BALL_Z); b.pos.copy(b.mesh.position); b.lb.position.set(b.x,y+b.ly,BALL_Z);}); pitch.geometry.setFromPoints([new T.Vector3(2.3,y+0.28,BALL_Z),new T.Vector3(-1.0,y-0.11,BALL_Z)]); spine.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),g.n); chest.quaternion.copy(spine.quaternion);
+      card.querySelectorAll('.ht button').forEach(x=>x.classList.toggle('on',x.dataset.h===k));}
+    // 体
+    const pelvis=new T.Mesh(new T.SphereGeometry(0.22,24,16),mat(NAVY)); pelvis.scale.set(1.35,0.55,0.8); scene.add(pelvis);
+    const spine=new T.Mesh(new T.CylinderGeometry(0.06,0.09,L,16),mat(WHITE)); scene.add(spine);
+    const chest=new T.Mesh(new T.CylinderGeometry(0.2,0.22,0.36,24),mat(NAVY,.85)); scene.add(chest);
+    const shoulders=new T.Mesh(new T.CylinderGeometry(0.045,0.045,0.82,16),mat(WHITE)); scene.add(shoulders);
+    const shL=new T.Mesh(new T.SphereGeometry(0.07,16,12),mat(WHITE)); scene.add(shL); const shR=new T.Mesh(new T.SphereGeometry(0.07,16,12),mat(WHITE)); scene.add(shR);
+    const headM=new T.Mesh(new T.SphereGeometry(0.15,20,16),mat(NAVY)); scene.add(headM);
+    const armMat=new T.LineBasicMaterial({color:GRAY});
+    const armL=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]),armMat); scene.add(armL);
+    const armR=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]),armMat); scene.add(armR);
+    const bat=new T.Mesh(new T.CylinderGeometry(0.035,0.016,1,16),mat(WHITE)); scene.add(bat);
+    const sweet=new T.Mesh(new T.CylinderGeometry(0.042,0.042,0.15,16),new T.MeshStandardMaterial({color:GOLD,roughness:.5,emissive:GOLD,emissiveIntensity:.35})); scene.add(sweet); // 先端から10〜25cm
+    const headBall=new T.Mesh(new T.SphereGeometry(0.05,14,12),mat(GOLD)); scene.add(headBall);
+    const gripBall=new T.Mesh(new T.SphereGeometry(0.035,14,12),mat(BLUE)); scene.add(gripBall);
+    const DOTS=100, dots=[]; for(let i=0;i<DOTS;i++){const d=new T.Mesh(new T.SphereGeometry(0.02,8,6),new T.MeshBasicMaterial({color:GOLD,transparent:true,opacity:.85})); scene.add(d); dots.push(d);}
+    const gripDots=[]; for(let i=0;i<40;i++){const d=new T.Mesh(new T.SphereGeometry(0.014,8,6),new T.MeshBasicMaterial({color:BLUE,transparent:true,opacity:.7})); scene.add(d); gripDots.push(d);}
+    const phaseLabels=[['バック',38],['アウト',105],['フロント',168],['フォロー',250]].map(([t,p])=>{const s=label(t,'#94a3b8',new T.Vector3(),.7); scene.add(s); return {s,p};});
+
+    let st=STATES[mode].ok, phi=0, psi=0, pel=45;
+    function place(){
+      const {grip,head,C}=pose(phi,st,g); const n=g.n, M=g.M;
+      pelvis.position.copy(H.clone().sub(new T.Vector3(0,g.C.y-C.y,0))); pelvis.rotation.y=rad(pel);
+      const Hc=pelvis.position; spine.position.copy(Hc.clone().add(n.clone().multiplyScalar(L/2)));
+      chest.position.copy(C.clone().add(n.clone().multiplyScalar(-0.08))); headM.position.copy(C.clone().add(n.clone().multiplyScalar(0.36)));
+      const sAxis=new T.Vector3(Math.cos(rad(psi)),0,-Math.sin(rad(psi))).applyMatrix4(M);
+      shoulders.position.copy(C); shoulders.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),sAxis);
+      const sl=C.clone().add(sAxis.clone().multiplyScalar(0.41)), sr=C.clone().sub(sAxis.clone().multiplyScalar(0.41)); shL.position.copy(sl); shR.position.copy(sr);
+      const bd=head.clone().sub(grip), len=bd.length(); bd.normalize();
+      bat.position.copy(grip.clone().add(head).multiplyScalar(0.5)); bat.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),bd); bat.scale.y=len;
+      sweet.position.copy(head.clone().sub(bd.clone().multiplyScalar(0.175))); sweet.quaternion.copy(bat.quaternion);
+      headBall.position.copy(head); gripBall.position.copy(grip);
+      armL.geometry.setFromPoints([sl,grip]); armR.geometry.setFromPoints([sr,grip]);
+      hgt.innerHTML=`ヘッド <b>${(head.y*100|0)}cm</b>　グリップ <b>${(grip.y*100|0)}cm</b>`;
+      return head;
+    }
+    function rebuild(){
+      for(let i=0;i<DOTS;i++){const p=i/(DOTS-1)*300, h=pose(p,st,g).head, h2=pose(p+3,st,g).head; dots[i].position.copy(h); dots[i].material.color.setHex(colOf((h2.y-h.y)/3));}
+      for(let i=0;i<40;i++){const p=i/39*200; gripDots[i].position.copy(pose(p,st,g).grip);}
+      phaseLabels.forEach(o=>o.s.position.copy(pose(o.p,st,g).head.clone().add(new T.Vector3(0,0.13,0))));
+      drawGraph(); verdict();
+    }
+    function drawGraph(){
+      const x0=56,x1=624,y0=22,y1=150; const X=p=>x0+(x1-x0)*p/300, Y=h=>y1-(y1-y0)*(h-0.3)/(1.95-0.3);
+      const BY=HEIGHTS[hk].y; let s=`<line x1="${X(0)}" y1="${Y(BY)}" x2="${X(300)}" y2="${Y(BY)}" stroke="#7dd3fc" stroke-dasharray="4 4" opacity=".7"/><text x="${x0-6}" y="${Y(BY)+4}" fill="#7dd3fc" font-size="10" text-anchor="end">ボール</text>`;
+      PH.forEach(([a,b,nm_],i)=>{ if(i>0) s+=`<line x1="${X(a)}" y1="${y0}" x2="${X(a)}" y2="${y1+8}" stroke="#1e3a5f"/>`; s+=`<text x="${(X(a)+X(b))/2}" y="${y1+24}" fill="#94a3b8" font-size="11" text-anchor="middle">${nm_}</text>`; });
+      s+=`<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}" stroke="#1e3a5f"/>`;
+      let low={y:9,p:0};
+      for(let p=0;p<300;p+=3){const h=pose(p,st,g).head, h2=pose(p+3,st,g).head; if(h.y<low.y) low={y:h.y,p}; const c=colOf((h2.y-h.y)/3); s+=`<line x1="${X(p)}" y1="${Y(h.y)}" x2="${X(p+3)}" y2="${Y(h2.y)}" stroke="#${c.toString(16).padStart(6,'0')}" stroke-width="3.5" stroke-linecap="round"/>`;}
+      for(let p=0;p<200;p+=4){const g1=pose(p,st,g).grip, g2=pose(p+4,st,g).grip; s+=`<line x1="${X(p)}" y1="${Y(g1.y)}" x2="${X(p+4)}" y2="${Y(g2.y)}" stroke="#7dd3fc" stroke-width="1.5" opacity=".6"/>`;}
+      s+=`<line x1="${X(low.p)}" y1="${Y(low.y)+6}" x2="${X(low.p)}" y2="${Y(low.y)+22}" stroke="#f8fafc"/><text x="${X(low.p)}" y="${Y(low.y)+34}" fill="#f8fafc" font-size="10" text-anchor="middle">最下点</text>`;
+      s+=`<text x="${x1}" y="${y0-8}" fill="#94a3b8" font-size="11" text-anchor="end">金＝ヘッド　青＝グリップ</text>`;
+      s+=`<circle class="gdot" cx="${X(phi)}" cy="${Y(pose(phi,st,g).head.y)}" r="5" fill="#f6c90e" stroke="#0a0e1a" stroke-width="2"/>`;
+      svg.innerHTML=s; svg._X=X; svg._Y=Y;
+    }
+    function moveDot(h){const d=svg.querySelector('.gdot'); if(d){d.setAttribute('cx',svg._X(phi)); d.setAttribute('cy',svg._Y(h.y));}}
+    function verdict(){
+      const v=card.querySelector('.verdict'); v.innerHTML='';
+      PH.forEach(([a,b,nm_])=>{let mn=9; for(let p=a;p<=b;p+=2) mn=Math.min(mn,pose(p,st,g).head.y); const fall=pose(a,st,g).head.y-mn, rise=pose(b,st,g).head.y-mn;
+        const net=(pose(b,st,g).head.y-pose(a,st,g).head.y)/(b-a); const k=(rise>0.035&&rise>=fall)?1:((net<-0.0012)?-1:0); const d=document.createElement('div'); d.innerHTML=`<small>${nm_}</small><b class="${cssOf(k*0.01)}">${nameOf(k*0.01)}</b>`; v.appendChild(d);});
+      const hits=card.querySelector('.hits'); hits.innerHTML='';
+      BALLS.forEach(b=>{const r=contact(b.pos,st,g); const d=document.createElement('div'); let cls,txt,sub;
+        if(r.d>0.075){cls='h-miss'; txt=r.dy<0?'下を空振り':'上を空振り'; sub=`バットはボールの${Math.round(Math.abs(r.dy)*100)}cm${r.dy<0?'下':'上'}`;}
+        else if(r.fromTip<0.11){cls='h-tip'; txt='先に当たる'; sub=`先端から${Math.round(r.fromTip*100)}cm`;}
+        else if(r.fromTip<=0.25){cls='h-ok'; txt='芯'; sub=`先端から${Math.round(r.fromTip*100)}cm`;}
+        else {cls='h-root'; txt='詰まる'; sub=`先端から${Math.round(r.fromTip*100)}cm`;}
+        d.innerHTML=`<small>${b.name}</small><b class="${cls}">${txt}</b><span class="sub">${sub}</span>`; hits.appendChild(d);});
+      card.querySelector('.where').innerHTML=TEXT[mode][st.key];
+      card.querySelectorAll('.st button').forEach(x=>x.classList.toggle('on',x.dataset.s===st.key));
+    }
+    function setPhaseText(p){const ph=PH.find(([a,b])=>p>=a&&p<b)||PH[3]; tag.textContent=ph[3]+'｜'+st.name; nm.textContent=ph[2];}
+    // カメラ
+    let theta=0.95, ph_=1.05, dist=5.4, target=new T.Vector3(0.1,0.95,0.35);
+    function updCam(){cam.position.set(target.x+dist*Math.sin(ph_)*Math.sin(theta), target.y+dist*Math.cos(ph_), target.z+dist*Math.sin(ph_)*Math.cos(theta)); cam.lookAt(target);}
+    const VIEWS={pitcher:[Math.PI/2,1.3],top:[0.0,0.08],side:[0.0,1.35],iso:[0.95,1.05]};
+    function setView(v){theta=VIEWS[v][0]; ph_=VIEWS[v][1]; updCam(); card.querySelectorAll('.vw button[data-v]').forEach(x=>x.classList.toggle('on',x.dataset.v===v));}
+    card.querySelectorAll('.vw button').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.v==='play'){play();return;} setView(b.dataset.v); }));
+    card.querySelectorAll('.st button').forEach(b=>b.addEventListener('click',()=>{ stop(); st=STATES[mode][b.dataset.s]; rebuild(); play(); }));
+    card.querySelectorAll('.ht button').forEach(b=>b.addEventListener('click',()=>{ stop(); setHeight(b.dataset.h); rebuild(); play(); }));
+    let drag=false,lx=0,ly=0;
+    wrap.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;wrap.style.cursor='grabbing';});
+    window.addEventListener('pointerup',()=>{drag=false;wrap.style.cursor='grab';});
+    window.addEventListener('pointermove',e=>{if(!drag)return; theta-=(e.clientX-lx)*0.008; ph_=Math.max(0.08,Math.min(1.5,ph_+(e.clientY-ly)*0.006)); lx=e.clientX;ly=e.clientY; updCam();});
+    wrap.addEventListener('touchmove',e=>{e.preventDefault();},{passive:false});
+    function resize(){const w=wrap.clientWidth,h=wrap.clientHeight; renderer.setSize(w,h,false); cam.aspect=w/h; cam.updateProjectionMatrix();}
+    window.addEventListener('resize',resize); resize(); updCam();
+    (function loop(){renderer.render(scene,cam); requestAnimationFrame(loop);})();
+    // 再生
+    let raf=null, timer=null; const ease=t=>t<.5?2*t*t:-1+(4-2*t)*t;
+    function stop(){if(raf)cancelAnimationFrame(raf); if(timer)clearTimeout(timer); raf=null;}
+    function tween(dur,fn){return new Promise(res=>{const t0=performance.now(); (function s(){const t=Math.min(1,(performance.now()-t0)/dur); fn(ease(t)); if(t<1) raf=requestAnimationFrame(s); else res();})();});}
+    async function play(){ stop(); phi=0; psi=0; pel=45; setPhaseText(0); place(); await new Promise(r=>timer=setTimeout(r,600));
+      await tween(2800,e=>{phi=300*e; psi=phi<200?85*phi/200:85+10*(phi-200)/100; pel=45+45*Math.min(1,phi/150); setPhaseText(phi); moveDot(place());});
+      timer=setTimeout(play,1800); }
+    // 初期化
+    const s0=(QS.match(/[?&]state=(ok|bad)/)||[])[1]; st=STATES[mode][s0||'ok'];
+    const h0=(QS.match(/[?&]height=(high|mid|low)/)||[])[1]; setHeight(HEIGHTS[h0]?h0:'mid');
+    const v0=(QS.match(/[?&]view=(\w+)/)||[])[1]; setView(VIEWS[v0]?v0:(mode==='a'?'side':'iso'));
+    rebuild();
+    if(still){ phi=+((QS.match(/[?&]phi=(\d+)/)||[])[1]||175); psi=85*Math.min(1,phi/200); pel=45+45*Math.min(1,phi/150); setPhaseText(phi); moveDot(place()); }
+    else { place(); setTimeout(play,500); }
+  }
+  document.querySelectorAll('.card[data-fig]').forEach(c=>{ if(only && c.dataset.fig!==only) return; makeFig(c,c.dataset.fig); });
+})();
+</script>
+</body>
+</html>

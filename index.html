@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>脊柱の傾きとスイングの面｜ダウンフェイズはどこで生まれるか</title>
+<style>
+  :root{--bg:#0a0e1a;--card:#111827;--line:#1e3a5f;--gold:#f6c90e;--red:#fc8181;--blue:#7dd3fc;--white:#f8fafc;--gray:#94a3b8;--body:#e2e8f0}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--white);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:32px 16px 48px}
+  .label{font-size:11px;letter-spacing:.3em;color:var(--gold);font-weight:700;text-align:center;margin:0 0 10px}
+  h1{font-size:24px;font-weight:900;text-align:center;margin:0 0 8px;line-height:1.4}
+  .lead{font-size:14px;color:var(--gray);text-align:center;line-height:1.8;max-width:600px;margin:0 auto 24px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;max-width:680px;margin:0 auto}
+  .band{height:4px;background:var(--gold)}
+  #three-wrap{position:relative;width:100%;aspect-ratio:4/3;background:#0a0e1a;cursor:grab}
+  #cv3d{width:100%;height:100%;display:block}
+  #phaseTag{position:absolute;left:14px;top:12px;font-size:12px;letter-spacing:.2em;color:var(--gold);font-weight:700}
+  #phaseName{position:absolute;left:14px;top:30px;font-size:20px;font-weight:900;color:var(--white)}
+  #hgt{position:absolute;left:14px;bottom:12px;font-size:12px;color:var(--gray)}
+  #hgt b{color:var(--white)}
+  .wm{position:absolute;top:12px;right:12px;height:34px;opacity:.92;pointer-events:none;filter:drop-shadow(0 2px 6px rgba(0,0,0,.7))}
+  .pctrl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 16px 0}
+  .pctrl button{background:#1e293b;color:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer}
+  .pctrl button.on{border-color:var(--gold);color:var(--gold)}
+  .pctrl button.ref{font-weight:400;color:var(--gray)}
+  .pctrl button.ref.on{color:var(--red);border-color:var(--red)}
+  .slider{display:flex;align-items:center;gap:10px;margin:8px 20px 0;font-size:12px;color:var(--gray)}
+  .slider input{flex:1;accent-color:#f6c90e}
+  .slider b{color:var(--white);min-width:3em;text-align:right}
+  .graph{margin:14px 16px 0}
+  .graph svg{display:block;width:100%;height:auto}
+  .verdict{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 16px 0}
+  .verdict div{background:#0a0e1a;border:1px solid var(--line);border-radius:8px;padding:8px 4px;text-align:center}
+  .verdict small{display:block;font-size:10px;color:var(--gray);letter-spacing:.1em}
+  .verdict b{font-size:15px}
+  .v-down{color:var(--gold)} .v-flat{color:var(--white)} .v-up{color:var(--red)}
+  .where{margin:12px 20px 18px;font-size:13px;line-height:1.8;color:var(--body);min-height:60px}
+  .where b{color:var(--gold)}
+  .note{font-size:12px;color:var(--gray);line-height:1.8;text-align:center;margin:24px auto 0;max-width:600px}
+  .legend{display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:center;font-size:12px;color:var(--gray);margin:16px 0 0}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{display:inline-block;width:14px;height:14px;border-radius:3px}
+  .use{font-size:12px;color:#f6c90e;text-align:center;margin:10px auto 0;max-width:560px;line-height:1.7}
+  .sig{text-align:center;font-size:11px;color:var(--gray);margin-top:36px;line-height:1.9}
+  .sig b{color:var(--white)}
+  body.still .pctrl, body.still .slider{display:none}
+  .cta{text-align:center;margin:28px auto 0}
+  .cta p{font-size:13px;color:var(--gray);margin:0 0 10px}
+  .cta a{display:inline-block;background:var(--gold);color:#0a0e1a;font-weight:900;padding:12px 22px;border-radius:10px;text-decoration:none;font-size:14px}
+  .cta a:hover{filter:brightness(1.08)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="label">SPINE &amp; SWING PLANE</p>
+  <h1>ダウンフェイズは、脊柱の傾きが作る。</h1>
+  <p class="lead">スイングバックは、立っていたバット（グリップよりヘッドが上）が両肩ラインまで落ちる動作なので、必ずダウンです。問題はその先。スイングの面は脊柱に直角なので、脊柱が地面と垂直なら面は水平で、スイングアウトにダウンフェイズは生まれません。ストライクゾーンを打つには股関節屈曲から側屈につなげて脊柱を傾けるしかなく、そのとき面は傾き、スイングアウトまでは必ずダウンフェイズになります。ドラッグで視点を回せます。</p>
+
+  <div class="card">
+    <div class="band"></div>
+    <div id="three-wrap">
+      <canvas id="cv3d"></canvas>
+      <div id="phaseTag"></div>
+      <div id="phaseName"></div>
+      <div id="hgt"></div>
+      <img class="wm" src="logo-text.png" alt="体修塾BCA">
+    </div>
+    <div class="pctrl" id="presetBtns">
+      <button data-p="vert">① 脊柱が垂直</button>
+      <button data-p="tilt" class="on">② 股関節屈曲 → 側屈</button>
+      <button data-p="side" class="ref">参考：側屈だけ（屈曲なし）</button>
+    </div>
+    <div class="slider"><span>股関節屈曲</span><input type="range" id="sA" min="0" max="40" value="30"><b id="vA">30°</b></div>
+    <div class="slider"><span>側屈（胸郭）</span><input type="range" id="sB" min="0" max="30" value="8"><b id="vB">8°</b></div>
+    <div class="pctrl" id="viewBtns">
+      <button data-v="pitcher">投手から</button>
+      <button data-v="side">横から</button>
+      <button data-v="top">真上から</button>
+      <button data-v="iso" class="on">斜めから</button>
+      <button data-v="play">▶ 再生</button>
+    </div>
+    <div class="graph"><svg id="g" viewBox="0 0 640 190"></svg></div>
+    <div class="verdict" id="verdict"></div>
+    <p class="where" id="where"></p>
+  </div>
+
+  <div class="legend">
+    <span><i style="background:#f6c90e"></i>ダウン（ヘッドが下がる）</span>
+    <span><i style="background:#f8fafc"></i>平行（高さを維持）</span>
+    <span><i style="background:#fc8181"></i>アッパー（ヘッドが上がる）</span>
+    <span><i style="background:#7dd3fc;opacity:.6"></i>ストライクゾーン</span>
+  </div>
+  <p class="note">体修塾の理論では、スイングフロントまでダウンフェイズを続けることも、フロントを地面と平行に維持することもできます。ヘッドを上げるフェイズはありません。上がるのはフォローで、それは結果です。</p>
+  <div class="cta"><p>前面・後面、トップハンド後面・ボトムハンド後面が気になった方へ。打席の線の話は、こちらの記事で書いています。</p><a href="https://note.com/humble_kiwi8378/n/ne553bda71c0a" target="_blank" rel="noopener">「打撃の本質」を読む（note・有料）→</a></div>
+  <p class="use">図の著作権は体修塾BCAにあります。有料読者の方の指導での使用は自由です。転載・再配布はご遠慮ください。</p>
+  <div class="sig"><b>体修塾BCA｜新潟県・柏崎の野球個別指導スクール</b><br>代表 大林智也｜日体大 体育学 ／ 上越教育大学院 スポーツ心理学修士<br>📍 新潟県柏崎市｜新潟県全域・出張指導対応</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const T=THREE, cv=document.getElementById('cv3d');
+  const renderer=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:false,preserveDrawingBuffer:true});
+  renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));
+  const scene=new T.Scene(); scene.background=new T.Color(0x0a0e1a);
+  const cam=new T.PerspectiveCamera(38,4/3,0.1,100);
+  scene.add(new T.AmbientLight(0xffffff,0.55));
+  const key=new T.DirectionalLight(0xffffff,0.9); key.position.set(3,6,4); scene.add(key);
+  const rim=new T.DirectionalLight(0xf6c90e,0.35); rim.position.set(-4,3,-3); scene.add(rim);
+  const GOLD=0xf6c90e, WHITE=0xf8fafc, GRAY=0x94a3b8, NAVY=0x1e293b, BLUE=0x7dd3fc, RED=0xfc8181;
+  const mat=(c,o)=>new T.MeshStandardMaterial({color:c,roughness:.6,metalness:.1,transparent:o!==undefined,opacity:o===undefined?1:o});
+  const rad=d=>d*Math.PI/180;
+  const MX=-1; // 右打者：トップハンド側＝-x（捕手側）。投手方向＝+x。前面（ベース側）＝+z
+
+  // ---- 床・打席の線
+  const floor=new T.Mesh(new T.PlaneGeometry(4.4,4.4),mat(0x111827,.9)); floor.rotation.x=-Math.PI/2; scene.add(floor);
+  const grid=new T.GridHelper(4.4,11,0x1e3a5f,0x1e3a5f); grid.position.y=0.001; scene.add(grid);
+  const zoneMat=(c,o)=>new T.MeshBasicMaterial({color:c,transparent:true,opacity:o,side:T.DoubleSide,depthWrite:false});
+  const zFront=new T.Mesh(new T.PlaneGeometry(4.4,2.2),zoneMat(GOLD,.09)); zFront.rotation.x=-Math.PI/2; zFront.position.set(0,0.004,1.1); scene.add(zFront);
+  const dl=(a,b,c,o)=>{const l=new T.Line(new T.BufferGeometry().setFromPoints([a,b]),new T.LineDashedMaterial({color:c,dashSize:.08,gapSize:.06,transparent:true,opacity:o}));l.computeLineDistances();return l;};
+  scene.add(dl(new T.Vector3(-2.2,0.006,0),new T.Vector3(2.2,0.006,0),WHITE,.5));
+  function label(text,color,pos,scale){const c=document.createElement('canvas');c.width=256;c.height=64;const x=c.getContext('2d');x.font='bold 30px sans-serif';x.fillStyle=color;x.textAlign='center';x.fillText(text,128,42);const t=new T.CanvasTexture(c);const sp=new T.Sprite(new T.SpriteMaterial({map:t,transparent:true,depthTest:false}));sp.renderOrder=10;sp.scale.set(scale||.6,(scale||.6)/4,1);sp.position.copy(pos);return sp;}
+  scene.add(label('前面','#f6c90e',new T.Vector3(MX*-1.4,0.12,1.9),.7));
+  scene.add(label('投手方向 →','#94a3b8',new T.Vector3(1.9,0.12,0.3),.8));
+  const zBackT=new T.Mesh(new T.PlaneGeometry(2.2,2.2),zoneMat(BLUE,.16)); zBackT.rotation.x=-Math.PI/2; zBackT.position.set(MX*1.1,0.004,-1.1); scene.add(zBackT);
+  const zBackB=new T.Mesh(new T.PlaneGeometry(2.2,2.2),zoneMat(RED,.12)); zBackB.rotation.x=-Math.PI/2; zBackB.position.set(MX*-1.1,0.004,-1.1); scene.add(zBackB);
+  scene.add(dl(new T.Vector3(0,0.006,-2.2),new T.Vector3(0,0.006,0),WHITE,.4));
+  scene.add(label('トップハンド後面','#7dd3fc',new T.Vector3(MX*1.1,0.12,-1.75),.95));
+  scene.add(label('ボトムハンド後面','#fc8181',new T.Vector3(MX*-1.1,0.12,-1.75),.95));
+
+  // ---- ストライクゾーンと投球
+  const ZONE={z:1.3, x0:-0.3, x1:0.3, y0:0.55, y1:1.25};
+  const zone=new T.Mesh(new T.PlaneGeometry(ZONE.x1-ZONE.x0,ZONE.y1-ZONE.y0),zoneMat(BLUE,.16)); zone.position.set(0,(ZONE.y0+ZONE.y1)/2,ZONE.z); scene.add(zone);
+  const zoneEdge=new T.LineSegments(new T.EdgesGeometry(zone.geometry),new T.LineBasicMaterial({color:BLUE,transparent:true,opacity:.7})); zoneEdge.position.copy(zone.position); scene.add(zoneEdge);
+  scene.add(label('ストライクゾーン','#7dd3fc',new T.Vector3(0,ZONE.y1+0.1,ZONE.z),.85));
+  const pitch=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(2.3,1.35,ZONE.z),new T.Vector3(-1.0,0.8,ZONE.z)]),new T.LineBasicMaterial({color:GRAY,transparent:true,opacity:.7})); scene.add(pitch);
+  const ball=new T.Mesh(new T.SphereGeometry(0.045,14,12),mat(WHITE)); ball.position.set(0.05,0.98,ZONE.z); scene.add(ball);
+
+  // ---- 体
+  const H=new T.Vector3(0,1.0,0), L=0.5, RH=1.2, RG=0.42;
+  const sm=x=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);};
+  const rH=p=>0.78+(RH-0.78)*sm((p-45)/90);   // スイングバックはトップハンド後面を通り、アウトで伸びる
+  const rG=p=>0.22+(RG-0.22)*sm((p-40)/100);
+  const elev=p=>rad(62*(1-sm(p/75)));            // スイングバック：立ったバットが両肩ラインまで落ちる
+  const hdir=p=>{const e=elev(p); return dir(p).multiplyScalar(Math.cos(e)).add(new T.Vector3(0,Math.sin(e),0));};
+  let alpha=30, beta=8;               // 股関節屈曲・側屈（度）
+  let phi=0, psi=0, pel=45;           // バット角・胸郭回旋・骨盤角
+  let showAlpha=alpha, showBeta=beta; // 描画用（姿勢の演出で変化）
+  function tiltM(a,b){return new T.Matrix4().makeRotationZ(-MX*rad(b)).multiply(new T.Matrix4().makeRotationX(rad(a)));}
+  const pelvis=new T.Mesh(new T.SphereGeometry(0.22,24,16),mat(NAVY)); pelvis.scale.set(1.35,0.55,0.8); pelvis.position.copy(H); scene.add(pelvis);
+  const spine=new T.Mesh(new T.CylinderGeometry(0.06,0.09,L,16),mat(WHITE)); scene.add(spine);
+  const chest=new T.Mesh(new T.CylinderGeometry(0.2,0.22,0.36,24),mat(NAVY,.85)); scene.add(chest);
+  const shoulders=new T.Mesh(new T.CylinderGeometry(0.045,0.045,0.82,16),mat(WHITE)); scene.add(shoulders);
+  const shL=new T.Mesh(new T.SphereGeometry(0.07,16,12),mat(WHITE)); scene.add(shL);
+  const shR=new T.Mesh(new T.SphereGeometry(0.07,16,12),mat(WHITE)); scene.add(shR);
+  const headM=new T.Mesh(new T.SphereGeometry(0.15,20,16),mat(NAVY)); scene.add(headM);
+  const spineLine=dl(new T.Vector3(),new T.Vector3(),GOLD,.9); scene.add(spineLine);
+  // スイングの面（脊柱に直角）
+  const planeM=new T.Mesh(new T.CircleGeometry(RH,48),new T.MeshBasicMaterial({color:GOLD,transparent:true,opacity:.07,side:T.DoubleSide,depthWrite:false})); scene.add(planeM);
+  const planeE=new T.LineLoop(new T.BufferGeometry().setFromPoints(Array.from({length:64},(_,i)=>new T.Vector3(Math.cos(i/64*2*Math.PI)*RH,0,Math.sin(i/64*2*Math.PI)*RH))),new T.LineBasicMaterial({color:GOLD,transparent:true,opacity:.35})); scene.add(planeE);
+  // 腕・バット
+  const armMat=new T.LineBasicMaterial({color:GRAY});
+  const armL=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]),armMat); scene.add(armL);
+  const armR=new T.Line(new T.BufferGeometry().setFromPoints([new T.Vector3(),new T.Vector3()]),armMat); scene.add(armR);
+  const bat=new T.Mesh(new T.CylinderGeometry(0.035,0.016,1,16),mat(WHITE)); scene.add(bat);
+  const headBall=new T.Mesh(new T.SphereGeometry(0.055,14,12),mat(GOLD)); scene.add(headBall);
+  const gripBall=new T.Mesh(new T.SphereGeometry(0.035,14,12),mat(BLUE)); scene.add(gripBall);
+  // 軌道（点で描く：色＝ダウン／平行／アッパー）
+  const DOTS=100, dots=[]; for(let i=0;i<DOTS;i++){const d=new T.Mesh(new T.SphereGeometry(0.02,8,6),new T.MeshBasicMaterial({color:GOLD,transparent:true,opacity:.85})); scene.add(d); dots.push(d);}
+  const phaseLabels=[['バック',38,'#94a3b8'],['アウト',105,'#94a3b8'],['フロント',168,'#94a3b8'],['フォロー',250,'#94a3b8']].map(([t,p,c])=>{const s=label(t,c,new T.Vector3(),.7); scene.add(s); return {s,p};});
+
+  const PH=[[0,75,'スイングバック','PHASE 1'],[75,135,'スイングアウト','PHASE 2'],[135,200,'スイングフロント','PHASE 3'],[200,300,'スイングフォロー','PHASE 4']];
+  const dir=p=>new T.Vector3(MX*Math.sin(rad(p)),0,-Math.cos(rad(p)));
+  function geom(a,b){const M=tiltM(a,b); const n=new T.Vector3(0,1,0).applyMatrix4(M); const C=H.clone().add(n.clone().multiplyScalar(L)); return {M,n,C};}
+  function headAt(p,a,b){const g=geom(a,b); return g.C.clone().add(hdir(p).applyMatrix4(g.M).multiplyScalar(rH(p)));}
+  const lag=p=>38*Math.max(0,1-p/150);
+  function place(){
+    const g=geom(showAlpha,showBeta), M=g.M, n=g.n, C=g.C;
+    const q=new T.Quaternion().setFromUnitVectors(new T.Vector3(0,1,0),n);
+    pelvis.rotation.y=rad(pel);
+    spine.position.copy(H.clone().add(n.clone().multiplyScalar(L/2))); spine.quaternion.copy(q);
+    chest.position.copy(C.clone().add(n.clone().multiplyScalar(-0.08))); chest.quaternion.copy(q);
+    headM.position.copy(C.clone().add(n.clone().multiplyScalar(0.36)));
+    spineLine.geometry.setFromPoints([H.clone().add(n.clone().multiplyScalar(-0.9)),H.clone().add(n.clone().multiplyScalar(1.4))]); spineLine.computeLineDistances();
+    planeM.position.copy(C); planeM.quaternion.copy(q).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(1,0,0),-Math.PI/2));
+    planeE.position.copy(C); planeE.quaternion.copy(q);
+    const sAxis=new T.Vector3(Math.cos(rad(psi)),0,-Math.sin(rad(psi))).applyMatrix4(M);
+    shoulders.position.copy(C); shoulders.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),sAxis);
+    const sl=C.clone().add(sAxis.clone().multiplyScalar(0.41)), sr=C.clone().sub(sAxis.clone().multiplyScalar(0.41)); shL.position.copy(sl); shR.position.copy(sr);
+    const hp=C.clone().add(hdir(phi).applyMatrix4(M).multiplyScalar(rH(phi)));
+    const gp=C.clone().add(dir(phi+lag(phi)).applyMatrix4(M).multiplyScalar(rG(phi)));
+    const bd=hp.clone().sub(gp).normalize();
+    bat.position.copy(gp.clone().add(hp).multiplyScalar(0.5)); bat.quaternion.setFromUnitVectors(new T.Vector3(0,1,0),bd); bat.scale.y=hp.distanceTo(gp);
+    headBall.position.copy(hp); gripBall.position.copy(gp);
+    armL.geometry.setFromPoints([sl,gp]); armR.geometry.setFromPoints([sr,gp]);
+    document.getElementById('hgt').innerHTML=`ヘッドの高さ <b>${(hp.y*100|0)}cm</b>`;
+    return hp;
+  }
+  const colOf=s=>s<-0.0025?GOLD:(s>0.0025?RED:WHITE);
+  const cssOf=s=>s<-0.0012?'v-down':(s>0.0012?'v-up':'v-flat');
+  const nameOf=s=>s<-0.0012?'ダウン':(s>0.0012?'アッパー':'平行');
+  function rebuild(){
+    // 軌道の点
+    for(let i=0;i<DOTS;i++){const p=i/(DOTS-1)*300, h=headAt(p,alpha,beta), h2=headAt(p+3,alpha,beta); dots[i].position.copy(h); dots[i].material.color.setHex(colOf((h2.y-h.y)/3));}
+    phaseLabels.forEach(o=>{const h=headAt(o.p,alpha,beta); o.s.position.copy(h.clone().add(new T.Vector3(0,0.13,0)));});
+    drawGraph(); verdict();
+  }
+  // ---- 高さのグラフ
+  const svg=document.getElementById('g');
+  function drawGraph(){
+    const W=640,Hh=190,x0=56,x1=624,y0=22,y1=150; const X=p=>x0+(x1-x0)*p/300, Y=h=>y1-(y1-y0)*(h-0.3)/(1.95-0.3);
+    let s=`<rect x="${X(0)}" y="${Y(ZONE.y1)}" width="${X(300)-X(0)}" height="${Y(ZONE.y0)-Y(ZONE.y1)}" fill="#7dd3fc" opacity=".13"/>`;
+    s+=`<text x="${x0-6}" y="${Y(ZONE.y1)+4}" fill="#7dd3fc" font-size="10" text-anchor="end">ゾーン上</text><text x="${x0-6}" y="${Y(ZONE.y0)+4}" fill="#7dd3fc" font-size="10" text-anchor="end">ゾーン下</text>`;
+    PH.forEach(([a,b,nm],i)=>{ if(i>0) s+=`<line x1="${X(a)}" y1="${y0}" x2="${X(a)}" y2="${y1+8}" stroke="#1e3a5f"/>`; s+=`<text x="${(X(a)+X(b))/2}" y="${y1+24}" fill="#94a3b8" font-size="11" text-anchor="middle">${nm}</text>`; });
+    s+=`<line x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}" stroke="#1e3a5f"/>`;
+    for(let p=0;p<300;p+=3){const h=headAt(p,alpha,beta), h2=headAt(p+3,alpha,beta); const c=colOf((h2.y-h.y)/3); s+=`<line x1="${X(p)}" y1="${Y(h.y)}" x2="${X(p+3)}" y2="${Y(h2.y)}" stroke="#${c.toString(16).padStart(6,'0')}" stroke-width="3.5" stroke-linecap="round"/>`;}
+    s+=`<text x="${x1}" y="${y0-8}" fill="#94a3b8" font-size="11" text-anchor="end">ヘッドの高さ（バット先端）</text>`;
+    s+=`<circle id="gdot" cx="${X(phi)}" cy="${Y(headAt(phi,showAlpha,showBeta).y)}" r="5" fill="#f6c90e" stroke="#0a0e1a" stroke-width="2"/>`;
+    svg.innerHTML=s; svg._X=X; svg._Y=Y;
+  }
+  function moveDot(hp){const d=document.getElementById('gdot'); if(d){d.setAttribute('cx',svg._X(phi)); d.setAttribute('cy',svg._Y(hp.y));}}
+  function verdict(){
+    const v=document.getElementById('verdict'); v.innerHTML='';
+    PH.forEach(([a,b,nm])=>{const dy=(headAt(b,alpha,beta).y-headAt(a,alpha,beta).y)/(b-a); const d=document.createElement('div'); d.innerHTML=`<small>${nm}</small><b class="${cssOf(dy)}">${nameOf(dy)}</b>`; v.appendChild(d);});
+    const lowest=Math.min(...Array.from({length:101},(_,i)=>headAt(i*3,alpha,beta).y));
+    const reach=lowest<=ZONE.y1;
+    const w=document.getElementById('where');
+    if(alpha===0&&beta===0) w.innerHTML='脊柱が地面と<b>垂直</b>。スイングバックは立っていたバットが両肩ラインまで落ちるのでダウンになりますが、面が水平なので<b>スイングアウトにダウンフェイズは生まれず</b>、そこから先はヘッドの高さが変わりません。円はストライクゾーンの上に浮いたままで、ゾーンのボールに届きません。';
+    else if(alpha===0) w.innerHTML='股関節屈曲がなく<b>側屈だけ</b>。面は捕手側へ傾くので、最下点はスイングアウトの途中に来ます。<b>スイングアウトの段階でヘッドが上がり始め</b>、前面の投手寄りではバットの先に当たりやすくなります（アッパーの前倒し）。';
+    else w.innerHTML=`<b>股関節屈曲</b>で面が前面側へ、<b>側屈</b>で捕手側へ傾きます。最下点は前面の奥に来るので、<b>スイングアウトまでは必ずダウンフェイズ</b>。スイングフロントは平行〜ダウンを維持し、上がるのはフォローだけです。${reach?'ヘッドはストライクゾーンの高さに届いています。':'この傾きではまだゾーンに届きません。屈曲を深くしてください。'}`;
+  }
+  // ---- UI
+  const sA=document.getElementById('sA'), sB=document.getElementById('sB'), vA=document.getElementById('vA'), vB=document.getElementById('vB');
+  function setTilt(a,b){alpha=a;beta=b;showAlpha=a;showBeta=b;sA.value=a;sB.value=b;vA.textContent=a+'°';vB.textContent=b+'°';rebuild();place();
+    document.querySelectorAll('#presetBtns button').forEach(x=>x.classList.toggle('on',(x.dataset.p==='vert'&&a===0&&b===0)||(x.dataset.p==='tilt'&&a===30&&b===8)||(x.dataset.p==='side'&&a===0&&b===20)));}
+  sA.addEventListener('input',()=>setTilt(+sA.value,+sB.value)); sB.addEventListener('input',()=>setTilt(+sA.value,+sB.value));
+  const PRESET={vert:[0,0],tilt:[30,8],side:[0,20]};
+  document.querySelectorAll('#presetBtns button').forEach(b=>b.addEventListener('click',()=>{stop(); setTilt(...PRESET[b.dataset.p]); play();}));
+  const tag=document.getElementById('phaseTag'), nm=document.getElementById('phaseName');
+  function setPhaseText(p){const ph=PH.find(([a,b])=>p>=a&&p<b)||PH[3]; tag.textContent=ph[3]; nm.textContent=ph[2];}
+  // ---- カメラ
+  let theta=0.95, ph_=1.05, dist=5.4, target=new T.Vector3(0.1,0.95,0.35);
+  function updCam(){cam.position.set(target.x+dist*Math.sin(ph_)*Math.sin(theta), target.y+dist*Math.cos(ph_), target.z+dist*Math.sin(ph_)*Math.cos(theta)); cam.lookAt(target);}
+  const VIEWS={pitcher:[Math.PI/2,1.3],top:[0.0,0.08],side:[0.0,1.35],iso:[0.95,1.05]};
+  document.querySelectorAll('#viewBtns button').forEach(b=>b.addEventListener('click',()=>{ if(b.dataset.v==='play'){play();return;} const v=VIEWS[b.dataset.v]; theta=v[0]; ph_=v[1]; updCam();
+    document.querySelectorAll('#viewBtns button[data-v]').forEach(x=>x.classList.toggle('on',x===b));}));
+  const wrap=document.getElementById('three-wrap'); let drag=false,lx=0,ly=0;
+  wrap.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;wrap.style.cursor='grabbing';});
+  window.addEventListener('pointerup',()=>{drag=false;wrap.style.cursor='grab';});
+  window.addEventListener('pointermove',e=>{if(!drag)return; theta-=(e.clientX-lx)*0.008; ph_=Math.max(0.08,Math.min(1.5,ph_+(e.clientY-ly)*0.006)); lx=e.clientX;ly=e.clientY; updCam();});
+  wrap.addEventListener('touchmove',e=>{e.preventDefault();},{passive:false});
+  function resize(){const w=wrap.clientWidth,h=wrap.clientHeight; renderer.setSize(w,h,false); cam.aspect=w/h; cam.updateProjectionMatrix();}
+  const vq=(location.search.match(/[?&]view=(\w+)/)||[])[1]; if(VIEWS[vq]){theta=VIEWS[vq][0]; ph_=VIEWS[vq][1]; document.querySelectorAll('#viewBtns button[data-v]').forEach(x=>x.classList.toggle('on',x.dataset.v===vq));}
+  window.addEventListener('resize',resize); resize(); updCam();
+  (function loop(){renderer.render(scene,cam); requestAnimationFrame(loop);})();
+
+  // ---- 再生：（傾きあり）垂直 → 股関節屈曲 → 側屈 → スイング
+  let raf=null, timer=null; const ease=t=>t<.5?2*t*t:-1+(4-2*t)*t;
+  function stop(){if(raf)cancelAnimationFrame(raf); if(timer)clearTimeout(timer); raf=null;}
+  function tween(dur,fn){return new Promise(res=>{const t0=performance.now(); (function st(){const t=Math.min(1,(performance.now()-t0)/dur); fn(ease(t)); if(t<1) raf=requestAnimationFrame(st); else res();})();});}
+  const wait=ms=>new Promise(r=>timer=setTimeout(r,ms));
+  async function play(){
+    stop(); phi=0; psi=0; pel=45;
+    if(alpha>0||beta>0){ showAlpha=0; showBeta=0; tag.textContent='POSTURE'; nm.textContent='脊柱が垂直'; place(); await wait(600);
+      if(alpha>0){ nm.textContent='股関節屈曲'; await tween(700,e=>{showAlpha=alpha*e; place();}); await wait(350);}
+      if(beta>0){ nm.textContent='側屈'; await tween(700,e=>{showBeta=beta*e; place();}); await wait(450);} }
+    else { showAlpha=0; showBeta=0; tag.textContent='POSTURE'; nm.textContent='脊柱が垂直のまま'; place(); await wait(700); }
+    await tween(2600,e=>{phi=300*e; psi=phi<200?85*phi/200:85+10*(phi-200)/100; pel=45+45*Math.min(1,phi/150); setPhaseText(phi); moveDot(place());});
+    timer=setTimeout(play,1800);
+  }
+  // 初期化
+  const q=location.search; const pr=(q.match(/[?&]preset=(\w+)/)||[])[1];
+  setTilt(...(PRESET[pr]||PRESET.tilt));
+  const still=/[?&]still=1/.test(q);
+  if(still){ document.body.classList.add('still'); phi=+((q.match(/[?&]phi=(\d+)/)||[])[1]||110); psi=85*Math.min(1,phi/200); pel=45+45*Math.min(1,phi/150); setPhaseText(phi); moveDot(place()); }
+  else { setPhaseText(0); place(); setTimeout(play,500); }
+})();
+</script>
+</body>
+</html>
