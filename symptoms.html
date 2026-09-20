@@ -71,9 +71,9 @@
   <div id="figB" class="sec">
     <p class="label">SYMPTOM B</p>
     <h1>先っぽの引っ掛け。——意図的なアッパー</h1>
-    <p class="lead">スイングフロントからフォローにかけて意図的にアッパーフェイズを作ると、バットごと芯が上に移動します。ボールの高さに残るのは芯より先の部分だけになり、その分だけ先に当たります。低めほど起きやすい。ドラッグで視点を回せます。</p>
+    <p class="lead">スイングアウトからフロントにかけて意図的に振り上げてアッパーフェイズを作ると、バットごと芯が上に移動します。ボールの高さに残るのは芯より先の部分だけになり、その分だけ先に当たります。低めほど起きやすい。ドラッグで視点を回せます。</p>
     <div class="card" data-fig="b"></div>
-    <p class="note sec-b-note">正しい形ではスイングフロントは平行のまま、上がるのはフォローだけです。ボールの高さを「低め」に切り替えると、引きつけたポイントでも先に当たるようになります。低めは股関節屈曲が深くなり、バットの角度が急になるので、芯が持ち上がった分のずれが大きく出ます。</p>
+    <p class="note sec-b-note">正しい形ではスイングフロントは平行のまま、上がるのはフォローだけです。「グリップダウン＋補うアッパー」は、症状Aが症状Bを呼ぶパターンです。ボールの高さを「低め」に切り替えると、引きつけたポイントでも先に当たるようになります。低めは股関節屈曲が深くなり、バットの角度が急になるので、芯が持ち上がった分のずれが大きく出ます。</p>
   </div>
 
   <div class="legend">
@@ -101,13 +101,14 @@
   const BALL_Z=1.2;
   const STATES={
     a:{ ok:{name:'正しい形',key:'ok',E:0,D:0,gd:0,ext:0.12}, bad:{name:'グリップダウン',key:'bad',E:0,D:0,gd:0.2,ext:0.12} },
-    b:{ ok:{name:'正しい形',key:'ok',E:0,D:0,gd:0,ext:0.12}, bad:{name:'意図的なアッパー',key:'bad',lift:0.06,ls:150,lw:90,gd:0,ext:0.04} },
+    b:{ ok:{name:'正しい形',key:'ok',E:0,D:0,gd:0,ext:0.12}, bad:{name:'意図的なアッパー',key:'bad',lift:0.05,ls:110,lw:90,gd:0,ext:0.04}, comp:{name:'グリップダウン＋補うアッパー',key:'comp',lift:0.22,ls:90,lw:100,gd:0.2,ext:0.04} },
   };
   const TEXT={
     a:{ ok:'スイングバックで落ちるのは<b>ヘッドだけ</b>。グリップは高さを保ったまま体の中心に引き寄せられ、ヘッドは肩のラインで止まります。そこから先の高さは脊柱の傾きが決めるので、引きつけたポイントも投手寄りのポイントも芯で捉えます。',
         bad:'スイングバックで<b>グリップだけが20cm下がった</b>形。体の姿勢は同じでも、ヘッドの高さはグリップの高さで決まるので、バットはボールの軌道より下を通ります。結果は<b>下空振り</b>。「早めに投球軌道に入れる」を、グリップを下げて形だけ真似るとこうなります。'},
     b:{ ok:'スイングアウトまでダウン、<b>スイングフロントは平行</b>、上がるのはフォローだけ。芯がボールの高さに残ったまま前面を通るので、引きつけたポイントでも前のポイントでも芯で捉えます。',
-        bad:'スイングフロントからフォローにかけて<b>意図的にアッパーフェイズを作った</b>形。バット全体が持ち上がるので、<b>芯も上に移動します</b>。ボールの高さに残っているのは芯より先の部分だけになり、その分だけ先に当たります。低めほど、この差が大きくなります。'}
+        bad:'スイングアウトからフロントにかけて<b>意図的に振り上げてアッパーフェイズを作った</b>形。バット全体が持ち上がるので、<b>芯も上に移動します</b>。ボールの高さに残っているのは芯より先の部分だけになり、その分だけ先に当たります。低めほど、この差が大きくなります。',
+        comp:'スイングバックで<b>グリップダウン</b>が入り、ヘッドがボールより下へ行き過ぎた分を<b>補うために振り上げた</b>形。症状Aが症状Bを呼ぶパターンです。最下点が深く、そこから急に上がるので、引きつけたポイントでは芯でも、前のポイントでは先しか残りません。'}
   };
   const GC={}; function geomFor(alpha){ if(!GC[alpha]){const M=new T.Matrix4().makeRotationZ(-MX*rad(BETA)).multiply(new T.Matrix4().makeRotationX(rad(alpha))); const n=new T.Vector3(0,1,0).applyMatrix4(M); GC[alpha]={M,n,C:H.clone().add(n.clone().multiplyScalar(L))};} return GC[alpha]; }
   const dir=p=>new T.Vector3(MX*Math.sin(rad(p)),0,-Math.cos(rad(p)));
@@ -134,7 +135,7 @@
   function makeFig(card,mode){
     card.innerHTML=`<div class="band"></div>
       <div class="three"><canvas></canvas><div class="tag"></div><div class="name"></div><div class="hgt"></div><img class="wm" src="logo-text.png" alt="体修塾BCA"></div>
-      <div class="pctrl st"><button data-s="ok">正しい形</button><button data-s="bad" class="bad">${STATES[mode].bad.name}</button></div>
+      <div class="pctrl st"><button data-s="ok">正しい形</button><button data-s="bad" class="bad">${STATES[mode].bad.name}</button>${STATES[mode].comp?`<button data-s="comp" class="bad">${STATES[mode].comp.name}</button>`:''}</div>
       <div class="pctrl ht"><span style="font-size:12px;color:#94a3b8;align-self:center">ボールの高さ</span><button data-h="high">高め</button><button data-h="mid" class="on">真ん中</button><button data-h="low">低め</button></div>
       <div class="pctrl vw"><button data-v="pitcher">投手から</button><button data-v="side">横から</button><button data-v="top">真上から</button><button data-v="iso">斜めから</button><button data-v="play">▶ 再生</button></div>
       <div class="graph"><svg viewBox="0 0 640 190"></svg></div>
@@ -261,7 +262,7 @@
       await tween(2800,e=>{phi=300*e; psi=phi<200?85*phi/200:85+10*(phi-200)/100; pel=45+45*Math.min(1,phi/150); setPhaseText(phi); moveDot(place());});
       timer=setTimeout(play,1800); }
     // 初期化
-    const s0=(QS.match(/[?&]state=(ok|bad)/)||[])[1]; st=STATES[mode][s0||'ok'];
+    const s0=(QS.match(/[?&]state=(ok|bad|comp)/)||[])[1]; st=STATES[mode][s0||'ok'];
     const h0=(QS.match(/[?&]height=(high|mid|low)/)||[])[1]; setHeight(HEIGHTS[h0]?h0:'mid');
     const v0=(QS.match(/[?&]view=(\w+)/)||[])[1]; setView(VIEWS[v0]?v0:(mode==='a'?'side':'iso'));
     rebuild();
