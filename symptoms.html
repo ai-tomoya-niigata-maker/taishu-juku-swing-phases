@@ -55,6 +55,14 @@
   .cta p{font-size:13px;color:var(--gray);margin:0 0 10px}
   .cta a{display:inline-block;background:var(--gold);color:#0a0e1a;font-weight:900;padding:12px 22px;border-radius:10px;text-decoration:none;font-size:14px}
   .cta a:hover{filter:brightness(1.08)}
+  body.shot .wrap{max-width:none;padding:0}
+  body.shot .wrap>*{display:none!important}
+  body.shot #figA, body.shot #figB{display:block!important;margin:0;padding:0;border:none}
+  body.shot #figA>*, body.shot #figB>*{display:none!important}
+  body.shot #figA>.card, body.shot #figB>.card{display:block!important;max-width:none;border:none;border-radius:0}
+  body.shot .card>*{display:none!important}
+  body.shot .card .three, body.shot #three-wrap{display:block!important;aspect-ratio:4/3;width:100vw;height:75vw}
+  body.shot .card .three .wm, body.shot #three-wrap .wm{display:block}
 </style>
 </head>
 <body>
@@ -92,7 +100,7 @@
 (function(){
   const QS=location.search;
   const only=(QS.match(/[?&]fig=(a|b)/)||[])[1]; if(only) document.body.classList.add('only-'+only);
-  const still=/[?&]still=1/.test(QS); if(still) document.body.classList.add('still');
+  const still=/[?&]still=1/.test(QS); if(still) document.body.classList.add('still'); if(/[?&]shot=1/.test(QS)) document.body.classList.add('shot');
   const T=THREE, rad=d=>d*Math.PI/180, sm=x=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);};
   const GOLD=0xf6c90e, WHITE=0xf8fafc, GRAY=0x94a3b8, NAVY=0x1e293b, BLUE=0x7dd3fc, RED=0xfc8181;
   const MX=-1, H=new T.Vector3(0,1.0,0), L=0.5, RH=1.2, RG=0.42, BETA=8;

@@ -50,6 +50,11 @@
   .cta p{font-size:13px;color:var(--gray);margin:0 0 10px}
   .cta a{display:inline-block;background:var(--gold);color:#0a0e1a;font-weight:900;padding:12px 22px;border-radius:10px;text-decoration:none;font-size:14px}
   .cta a:hover{filter:brightness(1.08)}
+  body.shot .wrap{max-width:none;padding:0}
+  body.shot .wrap>*{display:none!important}
+  body.shot .card{display:block!important;max-width:none;border:none;border-radius:0}
+  body.shot .card>*{display:none!important}
+  body.shot #three-wrap{display:block!important;aspect-ratio:4/3;width:100vw;height:75vw}
 </style>
 </head>
 <body>
@@ -273,7 +278,7 @@
   // 初期化
   const q=location.search; const pr=(q.match(/[?&]preset=(\w+)/)||[])[1];
   setTilt(...(PRESET[pr]||PRESET.tilt));
-  const still=/[?&]still=1/.test(q);
+  const still=/[?&]still=1/.test(q); if(/[?&]shot=1/.test(q)) document.body.classList.add('shot');
   if(still){ document.body.classList.add('still'); phi=+((q.match(/[?&]phi=(\d+)/)||[])[1]||110); psi=85*Math.min(1,phi/200); pel=45+45*Math.min(1,phi/150); setPhaseText(phi); moveDot(place()); }
   else { setPhaseText(0); place(); setTimeout(play,500); }
 })();
